@@ -7,7 +7,7 @@ const CVPreview = () => {
 
   // Efecto para obtener los datos del CV desde la API
   useEffect(() => {
-    fetch("http://http://172.17.22.153/api.php")
+    fetch("http://172.17.22.153/api.php")  // Corregir la URL aquí
       .then((res) => res.json())
       .then((data) => {
         setCVData(data);
