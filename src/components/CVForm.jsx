@@ -25,7 +25,11 @@ const CVForm = ({ onUpdate }) => {
       });
       const data = await response.json();
       if (data.success) {
-        onUpdate(formData); // Actualiza la vista previa del CV
+        if (onUpdate && typeof onUpdate === "function") {
+          onUpdate(formData); // Actualiza la vista previa del CV si onUpdate es una función
+        } else {
+          console.log("onUpdate no es una función");
+        }
         alert("Datos actualizados correctamente");
       } else {
         alert("Error al actualizar los datos");
