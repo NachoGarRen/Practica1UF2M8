@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import jsPDF from "jspdf";
+import { API_URL } from "../config";
 
 const CVPreview = () => {
   const [cvData, setCVData] = useState(null);
@@ -9,7 +10,7 @@ const CVPreview = () => {
   useEffect(() => {
     const fetchCVData = async () => {
       try {
-        const response = await fetch("http://172.17.22.153/api.php", {
+        const response = await fetch(`${API_URL}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

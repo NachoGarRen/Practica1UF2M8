@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { API_URL } from "../config";
 
 const CVForm = ({ onUpdate }) => {
   const [formData, setFormData] = useState({
@@ -17,7 +18,7 @@ const CVForm = ({ onUpdate }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://172.17.22.153/api.php", {
+      const response = await fetch(`${API_URL}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

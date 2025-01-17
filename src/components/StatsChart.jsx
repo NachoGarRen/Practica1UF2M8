@@ -10,6 +10,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { API_URL } from "../config";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
@@ -21,7 +22,7 @@ const StatsChart = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://172.17.22.153/api.php", {
+        const response = await fetch(`${API_URL}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
