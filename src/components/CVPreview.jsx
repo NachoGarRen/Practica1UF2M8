@@ -2,32 +2,39 @@ import React, { useState, useEffect } from "react";
 import jsPDF from "jspdf";
 
 const CVPreview = () => {
-  const [cvData, setCVData] = useState(null); // Estado para almacenar los datos del CV
-  const [loading, setLoading] = useState(true); // Estado para manejar la carga
+  const [cvData, setCVData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const token = localStorage.getItem("token");
 
-  // Efecto para obtener los datos del CV desde la API
   useEffect(() => {
-    fetch("http://172.17.22.118/api.php")  // Corregir la URL aquí
-      .then((res) => res.json())
-      .then((data) => {
+    const fetchCVData = async () => {
+      try {
+        const response = await fetch("http://172.17.22.153/api.php", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!response.ok) throw new Error("Error en la autenticación o conexión");
+        const data = await response.json();
         setCVData(data);
-        setLoading(false); // Cambia el estado de carga una vez se obtienen los datos
-      })
-      .catch((error) => {
-        console.error("Error fetching CV data:", error);
-        setLoading(false); // Asegúrate de que el estado de carga cambie incluso si hay error
-      });
-  }, []); // Este efecto se ejecutará solo una vez cuando el componente se monte
+        setLoading(false);
+      } catch (error) {
+        console.error("Error al obtener el CV:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchCVData();
+  }, [token]);
 
   if (loading) {
-    return <div>Cargando...</div>; // Muestra "Cargando..." mientras se obtienen los datos
+    return <div>Cargando...</div>;
   }
 
   if (!cvData) {
-    return <div>No se pudo obtener el CV.</div>; // Muestra un mensaje si no hay datos
+    return <div>No se pudo obtener el CV.</div>;
   }
 
-  // Función para generar el PDF
   const generatePDF = () => {
     const { name, profession, experience, email } = cvData;
     const doc = new jsPDF();
@@ -40,13 +47,34 @@ const CVPreview = () => {
   };
 
   return (
-    <div className="space-y-4">
-      <h1 className="text-2xl font-bold">Vista Previa del CV</h1>
-      <p><strong>Nombre:</strong> {cvData.name}</p>
-      <p><strong>Profesión:</strong> {cvData.profession}</p>
-      <p><strong>Experiencia:</strong> {cvData.experience}</p>
-      <p><strong>Correo Electrónico:</strong> {cvData.email}</p>
-      <button onClick={generatePDF} className="btn mt-4">Descargar PDF</button>
+    <div className="space-y-6">
+      <h1 className="text-2xl font-bold text-indigo-600 mb-4">Vista Previa del CV</h1>
+      <table className="table-auto w-full border-collapse text-gray-700">
+        <tbody>
+          <tr className="border-b">
+            <td className="px-4 py-2 font-medium">Nombre:</td>
+            <td className="px-4 py-2">{cvData.name}</td>
+          </tr>
+          <tr className="border-b">
+            <td className="px-4 py-2 font-medium">Profesión:</td>
+            <td className="px-4 py-2">{cvData.profession}</td>
+          </tr>
+          <tr className="border-b">
+            <td className="px-4 py-2 font-medium">Experiencia:</td>
+            <td className="px-4 py-2">{cvData.experience}</td>
+          </tr>
+          <tr>
+            <td className="px-4 py-2 font-medium">Correo Electrónico:</td>
+            <td className="px-4 py-2">{cvData.email}</td>
+          </tr>
+        </tbody>
+      </table>
+      <button
+        onClick={generatePDF}
+        className="bg-indigo-600 text-white px-6 py-2 rounded-full shadow-lg mt-4 hover:bg-indigo-700 transition duration-200"
+      >
+        Descargar PDF
+      </button>
     </div>
   );
 };

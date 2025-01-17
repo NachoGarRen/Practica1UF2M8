@@ -16,28 +16,31 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 const StatsChart = () => {
   const [chartData, setChartData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
-    // Llamada a la API para obtener los datos
     const fetchData = async () => {
       try {
-        const response = await fetch("http://172.17.22.118/api.php");
+        const response = await fetch("http://172.17.22.153/api.php", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!response.ok) throw new Error("Error en la autenticación o conexión");
         const data = await response.json();
 
-        // Limpiar y transformar los datos para el gráfico
-        const experience = data.experience.match(/\d+/); // Extraer el primer número de la cadena
-        const yearsOfExperience = experience ? parseInt(experience[0], 10) : 0; // Si no hay número, colocar 0
+        const experience = data.experience.match(/\d+/);
+        const yearsOfExperience = experience ? parseInt(experience[0], 10) : 0;
 
         const transformedData = {
-          labels: [data.name], // Usamos el nombre para la etiqueta
+          labels: [data.name],
           datasets: [
             {
               label: "Años de Experiencia",
-              data: [yearsOfExperience], // Usamos el número de años
+              data: [yearsOfExperience],
               borderColor: "rgba(75, 192, 192, 1)",
               backgroundColor: "rgba(75, 192, 192, 0.2)",
-              tension: 0.3,
-              fill: true,
+              borderWidth: 1,
             },
           ],
         };
@@ -45,22 +48,21 @@ const StatsChart = () => {
         setChartData(transformedData);
         setLoading(false);
       } catch (error) {
-        console.error("Error al obtener los datos de la API:", error);
+        console.error("Error al obtener las estadísticas:", error);
         setLoading(false);
       }
     };
 
     fetchData();
-  }, []);
+  }, [token]);
 
   if (loading) {
-    return <p>Cargando datos...</p>;
+    return <div>Cargando gráfico...</div>;
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-md">
-      <h2 className="text-xl font-bold mb-4">Gráfico de Experiencia</h2>
-      {chartData ? <Line data={chartData} /> : <p>No hay datos disponibles.</p>}
+    <div className="bg-white p-6 rounded-xl shadow-xl">
+      <Line data={chartData} />
     </div>
   );
 };
