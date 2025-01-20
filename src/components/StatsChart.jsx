@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { Line } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  PointElement,
-  LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend,
 } from "chart.js";
 import { API_URL } from "../config";
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const StatsChart = () => {
   const [chartData, setChartData] = useState(null);
@@ -39,8 +38,8 @@ const StatsChart = () => {
             {
               label: "Años de Experiencia",
               data: [yearsOfExperience],
+              backgroundColor: "rgba(75, 192, 192, 0.6)",
               borderColor: "rgba(75, 192, 192, 1)",
-              backgroundColor: "rgba(75, 192, 192, 0.2)",
               borderWidth: 1,
             },
           ],
@@ -62,8 +61,11 @@ const StatsChart = () => {
   }
 
   return (
-    <div className="bg-white p-6 rounded-xl shadow-xl">
-      <Line data={chartData} />
+    <div
+      className="bg-white p-3 rounded-xl shadow-xl mx-auto mt-10"
+      style={{ width: "50%", height: "50%" }} // Reduce el tamaño a la mitad
+    >
+      <Bar data={chartData} />
     </div>
   );
 };

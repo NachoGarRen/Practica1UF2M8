@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { API_URL } from "../config";
 
 function Login({ onLogin }) {
   const [email, setEmail] = useState("");
@@ -9,7 +10,7 @@ function Login({ onLogin }) {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://172.17.22.153/api.php?action=login", {
+      const response = await fetch(`${API_URL}?action=login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

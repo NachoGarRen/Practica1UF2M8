@@ -39,17 +39,49 @@ const CVPreview = () => {
   const generatePDF = () => {
     const { name, profession, experience, email } = cvData;
     const doc = new jsPDF();
-    doc.text("Curriculum Vitae", 10, 10);
-    doc.text(`Nombre: ${name}`, 10, 20);
-    doc.text(`Profesión: ${profession}`, 10, 30);
-    doc.text(`Experiencia: ${experience}`, 10, 40);
-    doc.text(`Correo Electrónico: ${email}`, 10, 50);
+  
+    // Configurar fuente y colores
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(20);
+    doc.setTextColor(40, 44, 52);
+  
+    // Título
+    doc.text("Curriculum Vitae", 105, 20, { align: "center" });
+  
+    // Separador
+    doc.setDrawColor(0, 0, 0);
+    doc.line(20, 25, 190, 25);
+  
+    // Datos personales con diseño
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(60, 64, 70);
+  
+    // Bloque de información
+    doc.setFillColor(240, 240, 240);
+    doc.rect(20, 30, 170, 90, "F");
+  
+    doc.setFont("helvetica", "bold");
+    doc.text("Información Personal", 25, 40);
+  
+    doc.setFont("helvetica", "normal");
+    doc.text(`Nombre: ${name}`, 25, 50);
+    doc.text(`Profesión: ${profession}`, 25, 60);
+    doc.text(`Experiencia: ${experience}`, 25, 70);
+    doc.text(`Correo Electrónico: ${email}`, 25, 80);
+  
+    // Pie de página
+    doc.setFont("helvetica", "italic");
+    doc.setFontSize(10);
+    doc.setTextColor(150, 150, 150);
+    doc.text("Generado con jsPDF y Nacho Garcia :)", 105, 290, { align: "center" });
+  
+    // Guardar PDF
     doc.save("cv.pdf");
   };
-
+  
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-indigo-600 mb-4">Vista Previa del CV</h1>
       <table className="table-auto w-full border-collapse text-gray-700">
         <tbody>
           <tr className="border-b">
